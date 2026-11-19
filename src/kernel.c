@@ -2,14 +2,27 @@
 #include "printk.h"
 #include "keyboard.h"
 
+static void banner(int n)
+{
+    static const enum vga_color colors[VGA_SCREENS] = {
+        VGA_LIGHT_GREEN, VGA_LIGHT_CYAN, VGA_YELLOW, VGA_LIGHT_MAGENTA
+    };
+
+    vga_switch(n);
+    vga_set_color(colors[n], VGA_BLACK);
+    if (n == 0)
+        printk("42\n");
+    printk("=== Screen %d ===\n", n + 1);
+    vga_set_color(VGA_WHITE, VGA_BLACK);
+    printk("F1-F4: switch screen | ESC: clear this screen\n> ");
+}
+
 void kmain(void)
 {
     vga_init();
 
-    vga_set_color(VGA_LIGHT_GREEN, VGA_BLACK);
-    printk("42\n");
-    vga_set_color(VGA_WHITE, VGA_BLACK);
-    printk("Tape quelque chose (F1-F4 = test touches speciales)\n> ");
+    for (int i = VGA_SCREENS - 1; i >= 0; i--)
+        banner(i);              /* se termine sur l'écran 1 */
 
     for (;;) {
         int k = kbd_poll();
@@ -18,11 +31,11 @@ void kmain(void)
             __asm__ volatile ("pause");
             continue;
         }
-        if (k >= KEY_F1)
-            printk("[F%d]", k - KEY_F1 + 1);
+        if (k >= KEY_F1 && k < KEY_F1 + VGA_SCREENS)
+            vga_switch(k - KEY_F1);
         else if (k == 27)
-            vga_init();               /* ESC efface l'écran */
-        else
+            vga_clear();
+        else if (k < 0x100)
             vga_putchar((char)k);
     }
 }

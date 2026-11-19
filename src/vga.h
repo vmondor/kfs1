@@ -2,6 +2,8 @@
 #define VGA_H
 #include "types.h"
 
+#define VGA_SCREENS 4
+
 enum vga_color {
     VGA_BLACK = 0, VGA_BLUE, VGA_GREEN, VGA_CYAN,
     VGA_RED, VGA_MAGENTA, VGA_BROWN, VGA_LIGHT_GREY,
@@ -14,5 +16,7 @@ void vga_clear(void);
 void vga_set_color(enum vga_color fg, enum vga_color bg);
 void vga_putchar(char c);
 void vga_puts(const char *s);
+void vga_switch(int n);
+int  vga_current(void);
 
 #endif
