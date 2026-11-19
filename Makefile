@@ -31,7 +31,7 @@ $(ISO): $(NAME) grub.cfg
 	mkdir -p iso/boot/grub
 	cp $(NAME) iso/boot/
 	cp grub.cfg iso/boot/grub/
-	grub-mkrescue -o $(ISO) iso 2>/dev/null
+	grub-mkrescue -d /usr/lib/grub/i386-pc --compress=xz --fonts= --locales= --themes= -o $(ISO) iso 2>/dev/null
 
 run: $(ISO)
 	qemu-system-i386 -cdrom $(ISO)
