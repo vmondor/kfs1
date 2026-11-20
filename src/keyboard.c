@@ -36,31 +36,31 @@ int kbd_poll(void)
 
     u8 sc = inb(KBD_DATA);
 
-    if (sc == 0xE0) {              /* préfixe touche étendue */
+    if (sc == 0xE0) {
         extended = 1;
         return -1;
     }
-    if (extended) {                /* on ignore flèches, etc. */
+    if (extended) {
         extended = 0;
         return -1;
     }
 
-    if (sc & 0x80) {               /* relâchement */
+    if (sc & 0x80) {
         sc &= 0x7F;
         if (sc == 0x2A || sc == 0x36)
             shift = 0;
         return -1;
     }
 
-    if (sc == 0x2A || sc == 0x36) {   /* shift gauche / droit */
+    if (sc == 0x2A || sc == 0x36) {
         shift = 1;
         return -1;
     }
-    if (sc == 0x3A) {                 /* caps lock */
+    if (sc == 0x3A) {
         caps = !caps;
         return -1;
     }
-    if (sc >= 0x3B && sc <= 0x3E)     /* F1 à F4 */
+    if (sc >= 0x3B && sc <= 0x3E)
         return KEY_F1 + (sc - 0x3B);
 
     if (sc >= 0x3A)
@@ -70,7 +70,6 @@ int kbd_poll(void)
     if (c == 0)
         return -1;
 
-    /* caps lock n'affecte que les lettres, shift affecte tout */
     int upper = is_letter(c) ? (shift ^ caps) : shift;
     return upper ? map_shift[sc] : c;
 }

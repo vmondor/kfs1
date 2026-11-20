@@ -22,7 +22,7 @@ void kmain(void)
     vga_init();
 
     for (int i = VGA_SCREENS - 1; i >= 0; i--)
-        banner(i);              /* se termine sur l'écran 1 */
+        banner(i);
 
     for (;;) {
         int k = kbd_poll();

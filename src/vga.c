@@ -32,7 +32,6 @@ static void update_cursor(void)
     outb(0x3D5, (u8)((pos >> 8) & 0xFF));
 }
 
-/* Recopie tout le buffer de l'écran actif dans la mémoire vidéo */
 static void flush(void)
 {
     for (size_t i = 0; i < VGA_CELLS; i++)
@@ -65,7 +64,7 @@ void vga_set_color(enum vga_color fg, enum vga_color bg)
     cur->color = fg | (bg << 4);
 }
 
-/* Efface uniquement l'écran actif */
+
 void vga_clear(void)
 {
     for (size_t i = 0; i < VGA_CELLS; i++)
